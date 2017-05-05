@@ -23,7 +23,7 @@ from PIL import Image
 log = logging.getLogger()
 logging.basicConfig(level=logging.INFO)
 
-MODEL_NAME = "guesso-resnet-50.pth"
+MODEL_NAME = "../ai-experiments/rijksdata/artbot-resnet-50.pth"
 
 transform = transforms.Compose([
     transforms.Scale(300),
