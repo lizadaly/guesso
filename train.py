@@ -39,7 +39,7 @@ BATCH_SIZE = 32
 NUM_WORKERS = 5
 NUM_EPOCHS = 10000
 NUM_CLASSES = 1  # We're only evaluating one feature: the year of origin
-MODEL_NAME = "guesso-resnet-50.pth"
+MODEL_NAME = "guesso-resnet-152.pth"
 
 
 class ImageSet(data.Dataset):

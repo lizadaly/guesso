@@ -2,11 +2,13 @@
 Guess the age of an image either from a CSV file of image information (default) or by URL.
 
 Usage:
-  guess.py
-  guess.py <url>
+  guess.py <model_name> [--csv=<csv_file>]
+  guess.py <model_name> [--url=<url>]
 
 Options:
   -h --help  Show this screen.
+  --url=<url>  Accept a URL as input
+  --csv=<csv_file>  Accept a CSV file of year,path-to-file and outputs to RESULTS_FILE
 """
 import logging
 from io import BytesIO
@@ -23,20 +25,15 @@ from PIL import Image
 log = logging.getLogger()
 logging.basicConfig(level=logging.INFO)
 
-MODEL_NAME = "../ai-experiments/rijksdata/artbot-resnet-50-no-photo.pth"
-
 transform = transforms.Compose([
     transforms.Scale(300),
     transforms.CenterCrop(224),
     transforms.ToTensor()
 ])
 
-model = models.resnet50(num_classes=1).cuda()
-model.load_state_dict(torch.load(MODEL_NAME))
-model.eval()
+RESULTS_FILE = 'results.csv'
 
-
-def make_guess(img, year=None):
+def make_guess(img, model, year=None):
     """Expects a PIL image, the model, and an optional year """
     tensor = transform(img)
     inp = Variable(tensor, volatile=True).cuda()
@@ -51,38 +48,41 @@ def make_guess(img, year=None):
     return pred, diff, year, tensor
 
 
-def predict_by_url(url):
+def predict_by_url(url, model):
     """Generate a prediction via a URL"""
     response = requests.get(url)
     img = Image.open(BytesIO(response.content)).convert('RGB')
-    pred, diff, year, tensor = make_guess(img)
+    pred, diff, year, tensor = make_guess(img, model)
     return pred, img
 
 
 if __name__ == '__main__':
 
     args = docopt(__doc__, version="guess.py 1.0")
-    output = ""
-    if args['<url>']:
-        log.info("Getting image from URL %s", args['<url>'])
-        pred = predict_by_url(args['<url>'])
+    model_name = args['<model_name>']
+    model = models.resnet152(num_classes=1).cuda()
+    model.load_state_dict(torch.load(model_name))
+    model.eval()
 
-    else:
+    if args['--url']:
+        log.info("Getting image from URL %s", args['--url'])
+        pred, img = predict_by_url(args['--url'], model)
+        print(pred)
+
+    elif args['--csv']:
         # Read the test data file that was created in `train.py`
-        test = pd.read_csv('test-after-split.csv')
-        pd.DataFrame.hist(test, 'year')
-
+        test = pd.read_csv(args['--csv'])
         log.info("Running test data with %d records...", len(test))
         count = 0
         avg_diff = 0
         out = []
         for f in test.itertuples():
             with Image.open(f.path).convert('RGB') as img:
-                pred, diff, year, tensor = make_guess(img, year=f.year)
+                pred, diff, year, tensor = make_guess(img, model, year=f.year)
                 avg_diff += diff
                 count += 1
                 out.append([year, diff, pred, f.path])
 
         results = pd.DataFrame(out, columns=['year', 'diff', 'pred', 'path'])
         results = results.set_index('year')
-        results.to_csv('results.csv')
+        results.to_csv(RESULTS_FILE)
