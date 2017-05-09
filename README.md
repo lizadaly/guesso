@@ -5,6 +5,8 @@
 
 Using PyTorch, I took a [pretrained ResNet152 model](http://pytorch.org/docs/torchvision/models.html) and further trained it on a collection of 40,000 images of works of art from the openly licensed collections at [Rijksmuseum](https://rijksmuseum.github.io/) and [The Metropolitan Museum of Art](https://github.com/metmuseum/openaccess). On average, it guesses the age of a work within 66 years.
 
+This project is referenced in my article, [AI Literacy: How artificial intelligence classifies and predicts our world](https://worldwritable.com/ai-literacy-what-artificial-intelligence-can-do-part-2-cbca0fc75a93).
+
 ## Detailed performance graphs
 Please see the <a href="https://github.com/lizadaly/guesso/blob/master/evaluate.ipynb">Jupyter Notebook</a> in this repository for a complete walkthrough of the performance of this model.
 
