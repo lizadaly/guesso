@@ -113,7 +113,7 @@ start_epoch = 0
 
 log.info("Loading model...")
 
-model = models.resnet50(pretrained=True)
+model = models.resnet152(pretrained=True)
 
 # Remove the classification layer from the pretrained network and replace with 1 feature (the year)
 num_ftrs = model.fc.in_features
