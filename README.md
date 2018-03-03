@@ -12,9 +12,8 @@ Please see the <a href="https://github.com/lizadaly/guesso/blob/master/evaluate.
 
 I've never worked with convolutional neural networks before, so take this as an example of a beginner's exploration rather than any sort of best practice. PyTorch is relatively new software and I've found it useful to read other people's code, as there isn't much of it out in the world yet.
 
-## Trained models
-* <a href="https://s3.amazonaws.com/worldwritable/nn-models/guesso-resnet-152.pth">ResNet 152</a> (avg error +/- 66 years, 222MB)
-* <a href="https://s3.amazonaws.com/worldwritable/nn-models/guesso-resnet-18.pth">ResNet 18</a> (avg error +/- 76 years, 90MB)
+## Trained model
+* <a href="http://lizadaly.com/projects/guesso/guesso-resnet-152.pth.gz">ResNet 152</a> (avg error +/- 66 years, 222MB)
 
 ## How to use this code
 
